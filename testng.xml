@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API Test Suite" parallel="classes" thread-count="4">
+    <test name="Entity Tests">
+        <classes>
+            <class name="org.example.springboot.secondtaskapitest.tests.CreateEntityTest"/>
+            <class name="org.example.springboot.secondtaskapitest.tests.GetAllEntitiesTest"/>
+            <class name="org.example.springboot.secondtaskapitest.tests.GetEntityTest"/>
+            <class name="org.example.springboot.secondtaskapitest.tests.PatchEntityTest"/>
+        </classes>
+    </test>
+</suite>
