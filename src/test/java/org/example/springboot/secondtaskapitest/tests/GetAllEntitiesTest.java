@@ -1,49 +1,24 @@
 package org.example.springboot.secondtaskapitest.tests;
 
 
-import io.qameta.allure.Step;
-import org.example.springboot.secondtaskapitest.base.BaseRequests;
-import org.example.springboot.secondtaskapitest.models.Response.EntityListResponse;
+import io.qameta.allure.Description;
+import org.example.springboot.secondtaskapitest.helpers.GetAllEntitiesHelper;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import java.io.IOException;
-
-import static io.restassured.RestAssured.given;
-import static org.testng.AssertJUnit.assertNotNull;
 
 public class GetAllEntitiesTest extends BaseTest {
 
-    private final String GET_ALL_ENTITIES= "/api/getAll";
-    private EntityListResponse entityListResponse;
+    private GetAllEntitiesHelper getAllEntitiesHelper;
 
     @BeforeClass
-    public void setUp() throws IOException {
+    public void setUp() {
         super.setUp();
+        getAllEntitiesHelper = new GetAllEntitiesHelper(requestSpecification);
     }
 
     @Test
-    @Step("Getting all entities and validate")
-    public void getAllEntitiesAndCheck() throws IOException {
-        getAllEntities();
-        validateEntities();
-    }
-
-    @Step("Getting all entities")
-    public void getAllEntities() {
-         entityListResponse = given()
-                .spec(requestSpecification)
-                .when()
-                .get(GET_ALL_ENTITIES)
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(EntityListResponse.class);
-    }
-
-    @Step("Validation of the entities")
-    public void validateEntities(){
-        assertNotNull("Response should not be null", entityListResponse);
-        assertNotNull("Entities list should not be null", entityListResponse.getEntities());
-        BaseRequests.validateListOfEntitiesResponse(entityListResponse);
+    @Description(" Test for getting list of entities and validate it")
+    public void getAllEntitiesAndCheck() {
+        getAllEntitiesHelper.getAllEntitiesAndValidateIt();
     }
 }

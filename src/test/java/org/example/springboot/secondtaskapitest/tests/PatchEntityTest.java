@@ -1,41 +1,23 @@
 package org.example.springboot.secondtaskapitest.tests;
 
-import io.qameta.allure.Step;
-import org.example.springboot.secondtaskapitest.models.Request.AdditionRequest;
-import org.example.springboot.secondtaskapitest.models.Request.EntityRequest;
+import io.qameta.allure.Description;
+import org.example.springboot.secondtaskapitest.helpers.PatchEntityHelper;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
-import static io.restassured.RestAssured.given;
-
 
 public class PatchEntityTest extends BaseTest {
-
-    private final String PATCH_ENTITY = "/api/patch/{id}";
-    private Long entityId;
+    private PatchEntityHelper patchEntityHelper;
 
     @BeforeClass
-    public void setUp() throws IOException {
+    public void setUp()  {
         super.setUp();
-        entityId = 1L;
+        patchEntityHelper = new PatchEntityHelper(requestSpecification);
     }
 
     @Test
-    @Step("Updating entity")
+    @Description("Test for creating update-entity and updating remote entity")
     public void patchEntityTest(){
-        EntityRequest entityRequest =  EntityRequest.builder()
-                .addition(AdditionRequest
-                        .builder()
-                        .build())
-                .build();
-                given()
-                .spec(requestSpecification)
-                .body(entityRequest)
-                .when()
-                .patch(PATCH_ENTITY,entityId)
-                .then()
-                .statusCode(204);
+        patchEntityHelper.updateEntityWithLocalEntity();
     }
 }

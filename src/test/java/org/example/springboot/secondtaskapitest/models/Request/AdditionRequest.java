@@ -11,11 +11,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdditionRequest {
+
     @Builder.Default
     @JsonProperty("additional_info")
     String additionalInfo = "Дополнительные сведения";
+
     @Builder.Default
     @JsonProperty("additional_number")
-    int additionalNumber = 123 ;
-
+    int additionalNumber = 123;
 }

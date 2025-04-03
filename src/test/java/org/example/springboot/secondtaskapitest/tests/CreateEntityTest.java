@@ -1,76 +1,31 @@
 package org.example.springboot.secondtaskapitest.tests;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Step;
-import org.example.springboot.secondtaskapitest.base.BaseRequests;
-import org.example.springboot.secondtaskapitest.models.Request.AdditionRequest;
-import org.example.springboot.secondtaskapitest.models.Request.EntityRequest;
-import org.testng.annotations.AfterMethod;
+import org.example.springboot.secondtaskapitest.helpers.BaseRequests;
+import org.example.springboot.secondtaskapitest.helpers.CreateEntityHelper;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
-
-
-import static io.restassured.RestAssured.given;
-import static org.testng.AssertJUnit.*;
 
 public class CreateEntityTest  extends BaseTest{
-    private static final String CREATE_ENTITY = "/api/create";
-    private Long userId ;
-    private EntityRequest entityRequest;
-    private String response;
+
+    private CreateEntityHelper createEntityHelper;
+    private Long userId;
 
     @BeforeClass
-    public void setUp() throws IOException {
+    public void setUp() {
         super.setUp();
+        createEntityHelper = new CreateEntityHelper(requestSpecification);
     }
 
     @Test
-    @Description("Test creating an entity and verifying its response")
+    @Description("Test for creating entity and verifying its response")
     public void testCreateEntity(){
-        createEntityLocally();
-        createRemoteEntity();
-        validateResponse(response);
-
+        userId = createEntityHelper.createEntityAndValidateIt();
     }
 
-    @Step("Creating remote user")
-    public void createRemoteEntity(){
-        response = given()
-                .spec(requestSpecification)
-                .body(entityRequest)
-                .when()
-                .post(CREATE_ENTITY)
-                .then()
-                .statusCode(200)
-                .extract()
-                .asString();
-    }
-
-    @Step("Creating local entity")
-    public void createEntityLocally(){
-        entityRequest  = EntityRequest.builder()
-                .addition(AdditionRequest.builder().build())
-                .build();
-    }
-
-    @Step("Validate response of creating entity")
-    public void validateResponse(String responseBody){
-        assertNotNull("Response body should not be null", responseBody);
-        assertTrue("Response body should be a number", responseBody.matches("\\d+"));
-        userId = Long.parseLong(responseBody);
-        BaseRequests.getEntityResponseAndCheck(
-                userId,
-                entityRequest.getTitle(),
-                entityRequest.isVerified(),
-                entityRequest.getImportantNumbers(),
-                entityRequest.getAddition().getAdditionalInfo(),
-                entityRequest.getAddition().getAdditionalNumber());
-    }
-
-    @AfterMethod
+    @AfterClass
     public void deleteEntityAfterCreation(){
         BaseRequests.deleteEntity(userId);
     }
